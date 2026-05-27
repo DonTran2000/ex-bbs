@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ex-bbs</title>
+</head>
+<body>
+<form th:object="${articleForm}" th:action="@{/insertArticle}" method="post">
+    <div th:errors="*{articleName}" style="color: red">エラー！</div>
+    <label for="articleName">
+        投稿者名: <input type="text" name="articleName" id="articleName">
+    </label>
+    <br>
+    <div th:errors="*{articleContent}" style="color: red">エラー！</div>
+    <label for="articleContent">
+        投稿内容:
+        <textarea name="articleContent" id="articleContent" cols="30" rows="10"></textarea>
+    </label>
+    <br>
+    <button>記事を投稿</button>
+</form>
+
+<hr>
+
+<div th:each="article : ${articleListScreen}" class="article">
+    <label for="name">
+        投稿者名: <span id="name" th:text="${article.name}"></span>
+    </label>
+    <br>
+    <label for="content">
+        投稿内容:
+        <pre id="content" th:text="${article.content}"></pre>
+    </label>
+    <br>
+    <form th:action="@{/deleteArticle}" method="post" style="display:inline;">
+        <input type="hidden" name="articleId" th:value="${article.id}">
+        <button style="margin-bottom: 20px;">記事を削除</button>
+    </form>
+    <!--  コメント  -->
+    <div th:each="commentList : ${article.commentList}" class="comment">
+
+        <div th:each="comment : ${commentList}">
+            <div th:if="${comment.name} == null" style="color: green;">
+                何かコメントしてくださいね！
+            </div>
+            <div th:if="${comment.name} != null">
+                <label for="comName">
+                    コメント者名: <span id="comName" th:text="${comment.name}"></span>
+                </label>
+                <br>
+                <label for="comContent">
+                    コメント内容:
+                    <br>
+                    <pre id="comContent" th:text="${comment.content}"></pre>
+                </label>
+            </div>
+
+        </div>
+    </div>
+
+    <form th:object="${commentForm}" th:action="@{/insertComment}" method="post">
+        <div th:if="${errorArticleId == article.id}" th:errors="*{commentName}" style="color: red">エラー！</div>
+        <label for="commentName">
+            名前: <input type="text" name="commentName" id="commentName">
+        </label>
+        <br>
+        <div th:if="${errorArticleId == article.id}" th:errors="*{commentContent}" style="color: red">エラー！</div>
+        <label for="commentContent">
+            コメント:
+            <br>
+            <textarea name="commentContent" id="commentContent" cols="30" rows="10"></textarea>
+        </label>
+        <input type="hidden" name="articleId" th:value="${article.id}">
+        <br>
+        <button>コメント投稿</button>
+    </form>
+    <hr>
+</div>
+
+</body>
+</html>
