@@ -1,5 +1,6 @@
 package com.example.ex_bbs.domain;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +9,8 @@ import lombok.ToString;
  * コメントの情報を表すドメインクラスです
  * データベースの「comments」テーブルに対応し
  */
+@Entity
+@Table(name = "comments")
 @Getter
 @Setter
 @ToString
@@ -15,6 +18,8 @@ public class Comment {
     /**
      * ID
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**
@@ -30,5 +35,7 @@ public class Comment {
     /**
      * 投稿ID
      */
-    private Integer articleId;
+    @ManyToOne
+    @JoinColumn(name = "article_id")
+    private Article article;
 }
